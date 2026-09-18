@@ -1,0 +1,11 @@
+.chalk-writing {
+  color: #f8f8f8;
+  font-family: "Caveat", cursive;
+  font-size: 32px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  text-shadow:
+    0 0 2px rgba(255, 255, 255, 0.3),
+    1px 1px 1px rgba(255, 255, 255, 0.15),
+    -1px -1px 1px rgba(255, 255, 255, 0.1);
+}

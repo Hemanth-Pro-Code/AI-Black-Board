@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+
+  --board-bg-1: #0b3d2e;
+  --board-bg-2: #0a3327;
+  --chalk-white: #f8fafc;
+  --chalk-blue: #93c5fd;
+  --chalk-yellow: #fde68a;
+  --chalk-green: #86efac;
+  --chalk-pink: #f9a8d4;
+
+  --glass: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.12);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background: linear-gradient(
+    135deg,
+    var(--board-bg-1),
+    var(--board-bg-2)
+  );
+  color: var(--foreground);
+}
+
+body {
+  position: relative;
+}
+
+/* Blackboard texture */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image:
+    radial-gradient(circle at 20% 20%, white 1px, transparent 1px),
+    radial-gradient(circle at 80% 40%, white 1px, transparent 1px),
+    radial-gradient(circle at 30% 70%, white 1px, transparent 1px),
+    radial-gradient(circle at 70% 85%, white 1px, transparent 1px);
+  background-size: 180px 180px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+input,
+textarea {
+  font: inherit;
+  outline: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Utility classes */
+
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+}
+
+.board-shadow {
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.35),
+    inset 0 0 80px rgba(0, 0, 0, 0.15);
+}
+
+.chalk-text {
+  color: var(--chalk-white);
+  text-shadow:
+    0 0 2px rgba(255, 255, 255, 0.5),
+    0 0 10px rgba(255, 255, 255, 0.15);
+}
+
+.fade-in {
+  animation: fadeIn 0.35s ease;
+}
+
+.float {
+  animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floating {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
