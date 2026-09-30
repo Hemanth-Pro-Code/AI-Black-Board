@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# IDE and editor caches
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# agents and local tools
+.agents/
