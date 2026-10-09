@@ -1,13 +1,21 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
 
-const client = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: "https://api.groq.com/openai/v1",
-});
-
 export async function POST(request: Request) {
   try {
+    const apiKey = process.env.GROQ_API_KEY;
+
+    if (!apiKey) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "GROQ_API_KEY is not configured in the server environment. Please add GROQ_API_KEY in your deployment environment variables (Vercel / Render).",
+        },
+        { status: 500 }
+      );
+    }
+
     const { prompt } = await request.json();
 
     if (!prompt || !prompt.trim()) {
@@ -19,6 +27,11 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    const client = new OpenAI({
+      apiKey,
+      baseURL: "https://api.groq.com/openai/v1",
+    });
 
     const completion = await client.chat.completions.create({
       model: "openai/gpt-oss-120b",

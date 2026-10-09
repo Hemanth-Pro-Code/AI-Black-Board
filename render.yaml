@@ -1,0 +1,17 @@
+# Render Blueprint specification for BlackBoard AI
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: blackboard-ai
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: HOSTNAME
+        value: 0.0.0.0
+      - key: GROQ_API_KEY
+        sync: false
