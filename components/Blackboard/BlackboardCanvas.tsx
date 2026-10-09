@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect } from "react";
@@ -13,7 +12,7 @@ export default function BlackboardCanvas() {
     stopDrawing,
   } = useCanvas();
 
-  const { strokes } = useBoardStore();
+  const { strokes, currentPageIndex } = useBoardStore();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -24,7 +23,7 @@ export default function BlackboardCanvas() {
       if (!ctx) return;
 
       canvas.width = window.innerWidth;
-canvas.height = 5000;
+      canvas.height = 5000;
 
       // Blackboard background
       ctx.fillStyle = "#0b3d2e";
@@ -58,7 +57,7 @@ canvas.height = 5000;
     return () => {
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, [canvasRef, strokes]);
+  }, [canvasRef, strokes, currentPageIndex]);
 
   return (
     <canvas
@@ -81,4 +80,3 @@ canvas.height = 5000;
     />
   );
 }
-

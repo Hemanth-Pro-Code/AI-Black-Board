@@ -12,11 +12,22 @@ import { useState } from "react";
 import { usePWA } from "@/components/PWA/PWAProvider";
 
 export default function BoardPage() {
-  const { setAiText } = useBoardStore();
+  const {
+    pages,
+    currentPageIndex,
+    prevPage,
+    nextPage,
+    addNewPage,
+    deleteCurrentPage,
+    setAiText,
+  } = useBoardStore();
   const { isOffline } = usePWA();
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+
+  const currentPage = currentPageIndex + 1;
+  const totalPages = Math.max(1, pages.length);
+  const canGoPrev = currentPageIndex > 0;
+  const canGoNext = currentPageIndex < totalPages - 1;
 
   const handleSolve = async () => {
     // Check if network is offline before attempting API/OCR operations
@@ -162,7 +173,7 @@ export default function BoardPage() {
               gap: "8px",
             }}
           >
-            <span>
+            <span style={{ fontWeight: 600, color: "#ffffff" }}>
               Page {currentPage} / {totalPages}
             </span>
             {isOffline && (
@@ -185,22 +196,32 @@ export default function BoardPage() {
         <div
           style={{
             display: "flex",
+            alignItems: "center",
             gap: 8,
           }}
         >
           <button
             onClick={() => {
-              if (currentPage > 1) {
-                setCurrentPage(currentPage - 1);
+              if (canGoPrev) {
+                prevPage();
+                window.scrollTo({ top: 0, behavior: "smooth" });
               }
             }}
+            disabled={!canGoPrev}
+            title={canGoPrev ? "Previous Page" : "Already on first page"}
+            aria-label="Previous Page"
             style={{
               padding: "6px 12px",
               borderRadius: "10px",
-              background: "rgba(255,255,255,0.08)",
+              background: canGoPrev
+                ? "rgba(255,255,255,0.12)"
+                : "rgba(255,255,255,0.04)",
               border: "1px solid rgba(255,255,255,0.15)",
-              color: "white",
+              color: canGoPrev ? "white" : "rgba(255,255,255,0.35)",
               fontSize: "0.85rem",
+              fontWeight: 500,
+              cursor: canGoPrev ? "pointer" : "not-allowed",
+              transition: "all 0.15s ease",
             }}
           >
             ◀ Prev
@@ -208,17 +229,24 @@ export default function BoardPage() {
 
           <button
             onClick={() => {
-              setTotalPages((p) => p + 1);
-              setCurrentPage((p) => p + 1);
+              addNewPage();
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
+            title="Create a new blank page"
+            aria-label="New Page"
             style={{
-              padding: "6px 12px",
+              padding: "6px 14px",
               borderRadius: "10px",
-              background: "rgba(34,197,94,0.18)",
-              border: "1px solid rgba(34,197,94,0.35)",
+              background: "rgba(34,197,94,0.22)",
+              border: "1px solid rgba(34,197,94,0.45)",
               color: "#86efac",
               fontSize: "0.85rem",
               fontWeight: 600,
+              cursor: "pointer",
+              transition: "all 0.15s ease",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
             }}
           >
             ➕ New Page
@@ -226,21 +254,60 @@ export default function BoardPage() {
 
           <button
             onClick={() => {
-              if (currentPage < totalPages) {
-                setCurrentPage(currentPage + 1);
+              if (canGoNext) {
+                nextPage();
+                window.scrollTo({ top: 0, behavior: "smooth" });
               }
             }}
+            disabled={!canGoNext}
+            title={canGoNext ? "Next Page" : "Already on last page"}
+            aria-label="Next Page"
             style={{
               padding: "6px 12px",
               borderRadius: "10px",
-              background: "rgba(255,255,255,0.08)",
+              background: canGoNext
+                ? "rgba(255,255,255,0.12)"
+                : "rgba(255,255,255,0.04)",
               border: "1px solid rgba(255,255,255,0.15)",
-              color: "white",
+              color: canGoNext ? "white" : "rgba(255,255,255,0.35)",
               fontSize: "0.85rem",
+              fontWeight: 500,
+              cursor: canGoNext ? "pointer" : "not-allowed",
+              transition: "all 0.15s ease",
             }}
           >
             Next ▶
           </button>
+
+          {totalPages > 1 && (
+            <button
+              onClick={() => {
+                if (
+                  typeof window !== "undefined" &&
+                  window.confirm(
+                    `Are you sure you want to delete Page ${currentPage}? This cannot be undone.`
+                  )
+                ) {
+                  deleteCurrentPage();
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }}
+              title={`Delete Page ${currentPage}`}
+              aria-label="Delete Page"
+              style={{
+                padding: "6px 10px",
+                borderRadius: "10px",
+                background: "rgba(239, 68, 68, 0.15)",
+                border: "1px solid rgba(239, 68, 68, 0.35)",
+                color: "#fca5a5",
+                fontSize: "0.85rem",
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+            >
+              🗑️
+            </button>
+          )}
         </div>
       </header>
 

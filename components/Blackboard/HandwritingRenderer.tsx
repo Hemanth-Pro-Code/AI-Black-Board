@@ -1,19 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useBoardStore } from "@/store/boardStore";
 import "@/styles/chalk.css";
 
 export default function HandwritingRenderer() {
-  const { aiText, aiPosition } = useBoardStore();
+  const { aiText, aiPosition, currentPageIndex } = useBoardStore();
   const [displayText, setDisplayText] = useState("");
+  const prevPageRef = useRef(currentPageIndex);
 
   useEffect(() => {
     if (!aiText) {
-      const resetTimer = setTimeout(() => setDisplayText(""), 0);
-      return () => clearTimeout(resetTimer);
+      setDisplayText("");
+      return;
     }
 
+    // When navigating between pages, display existing text immediately
+    if (prevPageRef.current !== currentPageIndex) {
+      prevPageRef.current = currentPageIndex;
+      setDisplayText(aiText);
+      return;
+    }
+
+    // On new solution, animate with typewriter effect
     let index = 0;
     const timer = setInterval(() => {
       setDisplayText(aiText.substring(0, index + 1));
@@ -22,10 +31,10 @@ export default function HandwritingRenderer() {
       if (index >= aiText.length) {
         clearInterval(timer);
       }
-    }, 40);
+    }, 35);
 
     return () => clearInterval(timer);
-  }, [aiText]);
+  }, [aiText, currentPageIndex]);
 
   if (!displayText) return null;
 

@@ -1,8 +1,11 @@
 "use client";
 
 import { Download } from "lucide-react";
+import { useBoardStore } from "@/store/boardStore";
 
 export default function SaveImage() {
+  const { currentPageIndex } = useBoardStore();
+
   const saveCanvas = () => {
     const canvas = document.querySelector("canvas");
 
@@ -12,7 +15,7 @@ export default function SaveImage() {
     }
 
     const link = document.createElement("a");
-    link.download = `blackboard-${Date.now()}.png`;
+    link.download = `blackboard-page-${currentPageIndex + 1}-${Date.now()}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
   };
@@ -20,7 +23,7 @@ export default function SaveImage() {
   return (
     <button
       onClick={saveCanvas}
-      title="Save blackboard as PNG image"
+      title="Save blackboard page as PNG image"
       aria-label="Save as PNG"
       style={{
         position: "fixed",
